@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-pro-aura",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "homepage": "https://github.com/khahly127/nodejs-pro-aura#readme",
+  "bugs": {
+    "url": "https://github.com/khahly127/nodejs-pro-aura/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khahly127/nodejs-pro-aura.git"
+  },
+  "license": "ISC",
+  "author": "Ly",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
