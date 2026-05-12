@@ -12,12 +12,12 @@ const getCreateUserPage = (req: Request, res: Response) => {
 
 const postCreateUserPage = async (req: Request, res: Response) => {
     const { name, email, address } = req.body;
-    await handleCreateUser(name, email, address);
+    const a = await handleCreateUser(name, email, address);
     return res.redirect("/");
 };
 const postDeleteUser = async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
-    await handleDeleteUser(id);
+    const a = await handleDeleteUser(id);
     return res.redirect("/");
 };
 
@@ -29,7 +29,7 @@ const getViewUser = async (req: Request, res: Response) => {
 };
 const postUpdateUser = async (req: Request, res: Response) => {
     const { id, name, email, address } = req.body;
-    await updateUserById(id, name, email, address);
+    const a = await updateUserById(id, name, email, address);
     return res.redirect("/");
 }
 
