@@ -1,13 +1,23 @@
-import getConnection from "config/database";
 import { prisma } from "config/client";
+import { ACCOUNT_TYPE } from "config/constant";
+import bcrypt from 'bcrypt';
 
-const handleCreateUser = async (name: string, email: string, address: string) => {
-
+const saltRounds = 10;
+const hashPassword = async (planText: string) => {
+    return await bcrypt.hash(planText, saltRounds);
+}
+const handleCreateUser = async (fullName: string, email: string, address: string, phone: string, avatar: string, role: string) => {
+    const defaultPassword = await hashPassword("123456");
     const newUser = await prisma.user.create({
         data: {
-            name: name,
-            email: email,
-            address: address
+            fullName: fullName,
+            username: email,
+            address: address,
+            password: defaultPassword,
+            accountType: ACCOUNT_TYPE.SYSTEM,
+            avatar: avatar,
+            phone: phone,
+            roleId: +role
         }
     });
     return newUser;
@@ -15,6 +25,10 @@ const handleCreateUser = async (name: string, email: string, address: string) =>
 const getAllUsers = async () => {
     const users = await prisma.user.findMany();
     return users;
+};
+const getAllRoles = async () => {
+    const roles = await prisma.role.findMany();
+    return roles;
 };
 const handleDeleteUser = async (id: string) => {
     const deletedUser = await prisma.user.delete({
@@ -32,18 +46,20 @@ const getUserById = async (id: string) => {
     });
     return user;
 };
-const updateUserById = async (id: string, name: string, email: string, address: string) => {
+const updateUserById = async (id: string, fullName: string, address: string, phone: string, avatar: string, role: string) => {
     const updatedUser = await prisma.user.update({
         where: {
             id: +id
         },
         data: {
-            name: name,
-            email: email,
-            address: address
+            fullName: fullName,
+            address: address,
+            ...(avatar !== undefined && { avatar: avatar }),
+            phone: phone,
+            roleId: +role
         }
     });
     return updatedUser;
 };
 
-export { handleCreateUser, getAllUsers, handleDeleteUser, getUserById, updateUserById };
+export { handleCreateUser, getAllUsers, getAllRoles, handleDeleteUser, getUserById, updateUserById, hashPassword };

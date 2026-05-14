@@ -2,6 +2,7 @@ import express from "express";
 import webRoutes from "./routes/web";
 import 'dotenv/config';
 import path from 'path';
+import initDatabase from "config/seed";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +21,8 @@ webRoutes(app);
 // config static files
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// seeding data
+initDatabase();
 app.listen(port, () => {
     console.log(`My app is running on port: ${port} `);
     console.log("env port: ", process.env.PORT);
