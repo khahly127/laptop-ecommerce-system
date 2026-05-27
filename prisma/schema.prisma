@@ -13,9 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.MediumText
+  expiresAt DateTime
+}
+
 model User {
   id          Int     @id @default(autoincrement())
-  username    String  @db.VarChar(255)
+  username    String  @unique @db.VarChar(255)
   password    String  @db.VarChar(255)
   fullName    String? @db.VarChar(255)
   address     String? @db.VarChar(255)
@@ -31,7 +38,7 @@ model User {
 
 model Role {
   id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(255)
+  name        String  @unique @db.VarChar(255)
   description String? @db.VarChar(255)
   users       User[]
 
@@ -46,16 +53,16 @@ model Order {
 }
 
 model Product {
-  id         Int    @id @default(autoincrement())
-  name       String @db.VarChar(255)
+  id         Int     @id @default(autoincrement())
+  name       String  @db.VarChar(255)
   price      Int
-  image      String @db.VarChar(255)
-  detailDesc String @db.Text
-  shortDesc  String @db.VarChar(255)
+  image      String? @db.VarChar(255)
+  detailDesc String  @db.MediumText
+  shortDesc  String  @db.VarChar(255)
   quantity   Int
-  sold       Int
-  factory    String @db.VarChar(255)
-  target     String @db.VarChar(255)
+  sold       Int?    @default(0)
+  factory    String  @db.VarChar(255)
+  target     String  @db.VarChar(255)
 
   @@map("products")
 }

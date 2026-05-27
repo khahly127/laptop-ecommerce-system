@@ -61,5 +61,7 @@ const updateUserById = async (id: string, fullName: string, address: string, pho
     });
     return updatedUser;
 };
-
-export { handleCreateUser, getAllUsers, getAllRoles, handleDeleteUser, getUserById, updateUserById, hashPassword };
+const comparePassword = async (planText: string, hashPassword: string) => {
+    return await bcrypt.compare(planText, hashPassword)
+}
+export { handleCreateUser, getAllUsers, getAllRoles, handleDeleteUser, getUserById, updateUserById, hashPassword, comparePassword };
