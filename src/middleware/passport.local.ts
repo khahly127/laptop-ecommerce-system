@@ -1,4 +1,5 @@
 import { prisma } from "config/client";
+import { AnyPtrRecord } from "dns";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { getUserWithRoleById } from "services/client/auth.service";
@@ -42,7 +43,7 @@ const configPassPortLocal = () => {
     passport.deserializeUser(async function (user: any, callback) {
         const { id, username } = user;
         // query to database
-        const userInDB = await getUserWithRoleById(id);
+        const userInDB: any = await getUserWithRoleById(id);
         return callback(null, { ...userInDB });
     });
 }
