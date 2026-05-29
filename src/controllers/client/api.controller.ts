@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { handleGetAllUser, handleGetUserbyID } from "services/client/api.service"
+import { handleDeleteUserbyID, handleGetAllUser, handleGetUserbyID, handleUpdateUserbyID } from "services/client/api.service"
 import { registerNewUser } from "services/client/auth.service";
 import { RegisterSchema, TRegisterSchema } from "src/validation/register.schema";
 import { date } from "zod";
@@ -34,6 +34,23 @@ const createUsersAPI = async (req: Request, res: Response) => {
         date: "create user succeed"
     })
 }
+const updateUserIdAPI = async (req: Request, res: Response) => {
+    const { fullName, address, phone } = req.body;
+    const { id } = req.params;
+
+    // success
+    await handleUpdateUserbyID(+id, fullName, address, phone);
+    res.status(200).json({
+        date: "update user succeed"
+    })
+}
+const deleteUserIdAPI = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    await handleDeleteUserbyID(+id);
+    res.status(200).json({
+        date: "delete user succeed"
+    })
+}
 export {
-    getAllUserAPI, getUserbyIdAPI, createUsersAPI
+    getAllUserAPI, getUserbyIdAPI, createUsersAPI, updateUserIdAPI, deleteUserIdAPI
 }

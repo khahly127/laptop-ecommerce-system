@@ -9,6 +9,19 @@ const handleGetUserbyID = async (id: number) => {
         where: { id }
     })
 }
+const handleUpdateUserbyID = async (id: number, fullName: string, address: string, phone: string) => {
+    return await prisma.user.update({
+        where: { id },
+        data: {
+            fullName, address, phone
+        }
+    })
+}
+const handleDeleteUserbyID = async (id: number) => {
+    return await prisma.user.delete({
+        where: { id },
+    })
+}
 export {
-    handleGetAllUser, handleGetUserbyID
+    handleGetAllUser, handleGetUserbyID, handleUpdateUserbyID, handleDeleteUserbyID
 }
