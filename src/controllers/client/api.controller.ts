@@ -1,11 +1,12 @@
 import { Request, Response } from "express"
-import { handleDeleteUserbyID, handleGetAllUser, handleGetUserbyID, handleUpdateUserbyID } from "services/client/api.service"
+import { handleDeleteUserbyID, handleGetAllUser, handleGetUserbyID, handleUpdateUserbyID, handleUserLogin } from "services/client/api.service"
 import { registerNewUser } from "services/client/auth.service";
 import { RegisterSchema, TRegisterSchema } from "src/validation/register.schema";
-import { date } from "zod";
 
 const getAllUserAPI = async (req: Request, res: Response) => {
     const users = await handleGetAllUser();
+    const user = req.user;
+    console.log("check user: ", user);
     res.status(200).json({
         data: users
     });
@@ -51,6 +52,23 @@ const deleteUserIdAPI = async (req: Request, res: Response) => {
         date: "delete user succeed"
     })
 }
+const loginAPI = async (req: Request, res: Response) => {
+    const { username, password } = req.body;
+    try {
+        const access_token = await handleUserLogin(username, password);
+        res.status(200).json({
+            date: {
+                access_token
+            }
+        })
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        res.status(401).json({
+            date: null,
+            message
+        })
+    }
+}
 export {
-    getAllUserAPI, getUserbyIdAPI, createUsersAPI, updateUserIdAPI, deleteUserIdAPI
+    getAllUserAPI, getUserbyIdAPI, createUsersAPI, updateUserIdAPI, deleteUserIdAPI, loginAPI
 }

@@ -79,7 +79,7 @@ const addProductToCart = async (quantity: number, productId: number, user: Expre
 }
 const getProductInCart = async (userId: number) => {
     const cart = await prisma.cart.findUnique({
-        where: { userId }
+        where: { userId: userId }
     })
     if (cart) {
         const currentCartDetail = await prisma.cartDetail.findMany({
@@ -92,6 +92,13 @@ const getProductInCart = async (userId: number) => {
 }
 const deleteProductInCart = async (cartDetailId: number, userId: number, sumCart: number) => {
     // xóa cart-detail
+    const currentCartDetail = await prisma.cartDetail.findUnique({
+        where: { id: cartDetailId }
+    })
+    if (!currentCartDetail) {
+        throw new Error('Cart detail not found');
+    }
+    const quantity = currentCartDetail.quantity;
     await prisma.cartDetail.delete({
         where: { id: cartDetailId }
     })
@@ -101,17 +108,18 @@ const deleteProductInCart = async (cartDetailId: number, userId: number, sumCart
             where: { userId }
         })
     } else {
-        //update
+        //update cart
         await prisma.cart.update({
             where: { userId },
             data: {
                 sum: {
-                    decrement: 1,
+                    decrement: quantity,
                 }
             }
         })
     }
 }
+
 const updateCartDetailBeforeCheckout = async (data: { id: string, quantity: string }[]) => {
     for (let i = 0; i < data.length; i++) {
         await prisma.cartDetail.update({
@@ -168,4 +176,19 @@ const handlePlaceOrder = async (userId: number, receiverName: string, receiverAd
         })
     }
 }
-export { getProducts, getProductById, addProductToCart, getProductInCart, deleteProductInCart, updateCartDetailBeforeCheckout, handlePlaceOrder }
+const getOrderHistory = async (userId: number) => {
+    return await prisma.order.findMany({
+        where: { userId },
+        include: {
+            orderDetails: {
+                include: {
+                    product: true
+                }
+            }
+        }
+    })
+}
+export {
+    getProducts, getProductById, addProductToCart, getProductInCart, deleteProductInCart,
+    updateCartDetailBeforeCheckout, handlePlaceOrder, getOrderHistory
+}
